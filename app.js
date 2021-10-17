@@ -23,32 +23,39 @@ app.get('/', (req, res) => {
 });
 
 app.post('/send-email', async (req, res) => {
-  try {
-    // create reusable transporter object using the default SMTP transport
-    let transporter = nodemailer.createTransport({
-      service: 'hotmail',
-      auth: {
-        user: process.env.EMAIL_USERNAME, // generated ethereal user
-        pass: process.env.EMAIL_PASSWORD, // generated ethereal password
+  // create reusable transporter object using the default SMTP transport
+  let transporter = nodemailer.createTransport({
+    service: 'hotmail',
+    auth: {
+      user: process.env.EMAIL_USERNAME,
+      pass: process.env.EMAIL_PASSWORD,
+    },
+    from: process.env.EMAIL_USERNAME,
+  });
+
+  const info = {
+    from: `Chitsanupong <${process.env.EMAIL_USERNAME}>`,
+    to: 'c.tangvasinkul@gmail.com',
+    subject: 'Sending Email with Node.js',
+    text: 'Hello Chitsanupong!', // plain text body
+    html: `<b>Hello Chitsanupong!</b>`,
+    attachments: [
+      {
+        filename: 'logo.jpg',
+        path: './logo.jpg',
       },
-    });
+    ],
+  };
 
-    // send mail with defined transport object
-    let info = await transporter.sendMail({
-      from: `Chitsanupong <${process.env.EMAIL_USERNAME}>`, // sender address
-      to: 'c.tangvasinkul@gmail.com', // list of receivers
-      subject: 'Sending Email with Node.js', // Subject line
-      // text: 'Hello world?', // plain text body
-      html: '<b>Hello Chitsanupong!</b>', // html body
-    });
-
-    console.log('Sent: ' + info.response);
-
-    console.log('Message sent: %s', info.messageId);
-    res.send({ message: 'OK' }).status(200);
-  } catch (error) {
-    res.send({ error: error }).status(500);
-  }
+  // send mail with defined transport object
+  await transporter.sendMail(info, (err, info) => {
+    if (err) {
+      res.send({ error: err }).status(500);
+    } else {
+      console.log('Sent: ' + info.response);
+      res.send({ message: 'OK' }).status(200);
+    }
+  });
 });
 
 app.listen(4000, () => console.log('Listening on Port 4000'));
