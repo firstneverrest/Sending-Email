@@ -1,0 +1,69 @@
+<h2>Sending E-mail with NodeJS</h2>
+<form id="email-form">
+  <div>
+    <label for='name'>Name:</label> 
+    <input id="name" type='text' required/>
+  </div>
+
+  <div>
+    <label for='email'>E-mail:</label>
+    <input id="email" type='text' required/>
+  </div>
+
+  <div>
+    <label for='subject'>Subject:</label>
+    <input id="subject" type='text' required/>
+  </div>
+
+  <div class="flex">
+    <label for='content'>Content:</label>
+    <textarea id="content" rows="4" cols="50"></textarea>
+  </div>
+
+  <button>Send E-mail</button>
+  <p id="msg"></p>
+</form>
+
+<script>
+  const form = document.getElementById('email-form');
+  const msg = document.getElementById('msg');
+
+  form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const username = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const subject = document.getElementById('subject').value;
+  const content = document.getElementById('content').value;
+
+  const url = `/send-email`;
+
+  const body = {
+    name: username,
+    email: email,
+    subject: subject,
+    content: content
+  };
+
+  console.log(body);
+   fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    })
+    .then((response) => {
+      if (response.status === 200) {
+        msg.innerHTML = 'E-mail sent successfully';
+        console.log('E-mail sent successfully');
+      } else {
+        msg.innerHTML = 'Invalid e-mail address';
+        console.log('E-mail could not be sent');
+      }
+    })
+    .catch((error) => {
+      msg.innerHTML = 'E-mail could not be sent';
+      console.log('E-mail could not be sent');
+    });
+});
+</script>
