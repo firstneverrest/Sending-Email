@@ -93,4 +93,6 @@ app.post('/send-gmail', async (req, res) => {
   });
 });
 
-app.listen(4000, () => console.log('Listening on Port 4000'));
+app.listen(process.env.PORT, () =>
+  console.log(`Server started on port ${process.env.PORT}`)
+);
