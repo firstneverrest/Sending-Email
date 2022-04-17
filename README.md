@@ -92,4 +92,29 @@ let transporter = nodemailer.createTransport({
 });
 ```
 
-## SendGrid
+## Deploy to Google Cloud
+
+1. Create a new project and go to App Engine section
+2. Install [Google Cloud SDK](https://cloud.google.com/sdk/docs/install-sdk?authuser=3#windows)
+3. Run `gcloud init` to initialize and sign in
+4. Create `app.yaml` file in NodeJS app which you can see [documentation here](https://cloud.google.com/appengine/docs/standard/nodejs/config/appref)
+5. If you encounter "[7] Access Not Configured." Error, you need to disable Cloud Build API and enable it again.
+6. GCP will use server.js file as a main JavaScript file
+7. Run `gcloud app deploy` to deploy
+8. Open your application link to see the result
+9. Run `gcloud app logs tail -s default` to show all logs
+
+### Handling Error
+
+if you encounter this error:
+
+```
+Error: Server Error
+
+The server encountered an error and could not complete your request.
+
+Please try again in 30 seconds.
+
+```
+
+You need to check your package.json and make sure that the start script is true in case main JavaScript file is not the server.js. For example, if your main JavaScript file is app.js instead of server.js, you need to change start script to `"start": "node app.js"`.
